@@ -8,16 +8,13 @@ namespace DatingApp.API.Data
     public class AuthRepository : IAuthRepository
     {
         private readonly DataContext _contex;
-        public AuthRepository(DataContext contex)
-        {
+        public AuthRepository(DataContext contex) {
             _contex = contex;
-
         }
+
         public async Task<User> Login(string username, string password)
         {
-
-        
-            var user = await _contex.users.FirstOrDefaultAsync(x => x.UserName == username);
+            var user = await _contex.users.Include(x=>x.Photos).FirstOrDefaultAsync(x => x.UserName == username);
 
             if (user == null)
                 return null;
@@ -25,7 +22,7 @@ namespace DatingApp.API.Data
             if (!varifyPasswordHash(password, user.PasswordSalt, user.PasswordHash))
                 return null;
           
-          return user;
+             return user;
         }
 
         private bool varifyPasswordHash(string password, byte[] passwordSalt, byte[] passwordHash)

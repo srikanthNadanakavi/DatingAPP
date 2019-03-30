@@ -25,12 +25,13 @@ namespace DatingApp.API
 {
     public class Startup
     {
+        
+        private IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,6 +42,7 @@ namespace DatingApp.API
             services.AddCors();
             services.AddAutoMapper();
             services.AddTransient<Seed>();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudSetting"));
             services.AddScoped<IDatingRepository,DatingRepository>();
             services.AddScoped<IAuthRepository,AuthRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>{
@@ -91,14 +93,12 @@ namespace DatingApp.API
            
             //seeder.SeedUsers();
             app.UseAuthentication();
-
-       
+             
             app.UseCors();
             
-            app.UseCors(x=>x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors(x=>x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); 
             app.UseMvc();
-          
-           
+               
         }
     }
 }
