@@ -39,14 +39,12 @@ export class PhotoEditorComponent implements OnInit {
   initilizeUploader(){
 
     this.uploader = new FileUploader({
-
       url:this.baseUrl + 'users/' + this.authService.decodedToken.nameid + '/photos',
       authToken:'Bearer ' + localStorage.getItem('token'),
       allowedFileType:['image'],
       removeAfterUpload:true,
       autoUpload:false,
-      maxFileSize: 10 * 1024 * 1024
-
+      maxFileSize: 10 * 1024 * 1024   
     });
 
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false;};
@@ -62,8 +60,14 @@ export class PhotoEditorComponent implements OnInit {
           dateAdded : res.dateAdded,
           description : res.description,
           isMain : res.isMain
-        };     
+        };
         this.photos.push(photo);  
+
+        if(photo.isMain){
+          this.authService.changeMemberPhoto(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem("user",JSON.stringify(this.authService.currentUser));
+        }
       }
     }
   }
@@ -71,9 +75,7 @@ export class PhotoEditorComponent implements OnInit {
   setMainPhoto(photo:Photo){
 
     this.userService.setMainPhoto(this.authService.decodedToken.nameid,photo.id).subscribe(() =>{
-
-      console.log("Photo upladed Succcessfull");
-
+      
       this.currentMain = this.photos.filter(p => p.isMain === true)[0];
       this.currentMain.isMain = false;
       photo.isMain = true;

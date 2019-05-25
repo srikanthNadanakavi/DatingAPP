@@ -20,7 +20,6 @@ confirm(message: string, okCallBack: () => any) {
 }
 
 success(message: string) {
-  console.log(message);
   alertify.success(message);
 }
 warning(message: string) {

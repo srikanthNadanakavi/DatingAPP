@@ -5,7 +5,9 @@ import { BsDropdownModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
-import {  FileUploadModule } from 'ng2-file-upload';
+import { FileUploadModule } from 'ng2-file-upload';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 
 import { AppComponent } from './app.component';
@@ -58,6 +60,7 @@ export function tokenGetter() {
       FormsModule,
       BsDropdownModule.forRoot(),
       RouterModule.forRoot(appRouts),
+      BsDatepickerModule.forRoot(),
       JwtModule.forRoot({
           config: {
             tokenGetter: tokenGetter,
@@ -67,7 +70,8 @@ export function tokenGetter() {
       }),
       TabsModule.forRoot(),
       NgxGalleryModule,
-      FileUploadModule
+      FileUploadModule,
+      ReactiveFormsModule
    ],
    providers: [
       AuthService,
